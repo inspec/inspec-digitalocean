@@ -1,1 +1,7 @@
 inspec.lock
+test/integration/attributes.yml
+.terraform
+.terraform.tfstate.lock.info
+terraform.tfstate
+terraform.tfstate.backup
+inspec-digitalocean.plan
