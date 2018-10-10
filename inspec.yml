@@ -1,0 +1,10 @@
+name: inspec-digitalocean
+title: InSpec Resource Pack for Digitalocean
+maintainer: Christoph Hartmann
+copyright: Christoph Hartmann
+copyright_email: chris@lollyrock.com
+license: Apache-2.0
+version: 0.1.0
+inspec_version: '>= 2.3.10'
+supports:
+  platform: digitalocean
