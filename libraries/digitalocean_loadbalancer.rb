@@ -18,43 +18,48 @@ class DigitaloceanLoadbalancer < Inspec.resource(1)
       @id = :id
       @value = opts[:id]
     end
-
-    @do = inspec.backend
-    @lbs = @do.droplet_client.load_balancers.all.select { |lb|
-      lb[@id] == @value
-    }
   end
 
   def id
-    return nil unless @lbs.one?
-    @lbs[0][:id]
+    loadbalancer[:id] unless loadbalancer.nil?
   end
 
   def name
-    return nil unless @lbs.one?
-    @lbs[0][:name]
+    loadbalancer[:name] unless loadbalancer.nil?
   end
 
   def ip
-    return nil unless @lbs.one?
-    @lbs[0][:ip]
+    loadbalancer[:ip] unless loadbalancer.nil?
   end
 
   def algorithm
-    return nil unless @lbs.one?
-    @lbs[0][:algorithm]
+    loadbalancer[:algorithm] unless loadbalancer.nil?
   end
 
   def status
-    return nil unless @lbs.one?
-    @lbs[0][:status]
+    loadbalancer[:status] unless loadbalancer.nil?
   end
 
   def exists?
-    @lbs.one?
+    !loadbalancer.nil?
   end
 
   def to_s
     "digitalocean loadbalancer #{@value}"
+  end
+
+  private
+
+  def loadbalancer
+    return @lbs if defined?(@lbs)
+    lbs = inspec.backend.droplet_client.load_balancers.all.select { |lb|
+      lb[@id].to_s == @value.to_s
+    }
+    if lbs.one?
+      @lbs = lbs[0]
+    else
+      @lbs = nil
+    end
+    @lbs
   end
 end

@@ -10,23 +10,32 @@ class DigitaloceanTag < Inspec.resource(1)
   def initialize(opts = {})
     super()
     @name = opts[:name]
-
-    @do = inspec.backend
-    @tags = @do.droplet_client.tags.all.select { |v|
-      v[:name] == @name
-    }
   end
 
   def name
-    return nil unless @tags.one?
-    @tags[0][:name]
+    tag[:name] unless tag.nil?
   end
 
   def exists?
-    @tags.one?
+    !tag.nil?
   end
 
   def to_s
     "digitalocean tag #{@name}"
+  end
+
+  private
+
+  def tag
+    return @tags if defined?(@tags)
+    tags = inspec.backend.droplet_client.tags.all.select { |v|
+      v[:name].to_s == @name.to_s
+    }
+    if tags.one?
+      @tags = tags[0]
+    else
+      @tags = nil
+    end
+    @tags
   end
 end

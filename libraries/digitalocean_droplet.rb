@@ -9,63 +9,81 @@ class DigitaloceanDroplet < Inspec.resource(1)
 
   def initialize(opts = {})
     super()
-    @id = opts[:id]
-    @do = inspec.backend
-    @droplet = @do.droplet_client.droplets.find(id: @id)
+    if opts[:name]
+      @id = :name
+      @value = opts[:name]
+    end
+
+    if opts[:id]
+      @id = :id
+      @value = opts[:id]
+    end
   end
 
   def id
-    @droplet[:id]
+    droplet[:id] unless droplet.nil?
   end
 
   def name
-    @droplet[:name]
+    droplet[:name] unless droplet.nil?
   end
 
-  # should return a digitalocean_region
   def region
-    # TODO: we should return a better object here
-    @droplet[:region].slug
+    droplet[:region].slug unless droplet.nil?
   end
 
-  # should return a digitalocean_image resource
   def image
-    @droplet[:image].slug
+    droplet[:image].slug unless droplet.nil?
   end
 
   def ipv6
-    @droplet[:ipv6]
+    droplet[:ipv6] unless droplet.nil?
   end
 
   def locked
-    @droplet[:locked]
+    droplet[:locked] unless droplet.nil?
   end
 
   def size
-    @droplet[:size_slug]
+    droplet[:size_slug] unless droplet.nil?
   end
 
   def disk
-    @droplet[:disk]
+    droplet[:disk] unless droplet.nil?
   end
 
   def vcpus
-    @droplet[:vcpus]
+    droplet[:vcpus] unless droplet.nil?
   end
 
   def status
-    @droplet[:status]
+    droplet[:status] unless droplet.nil?
   end
 
   def tags
-    @droplet[:tags]
+    droplet[:tags] unless droplet.nil?
   end
 
   def exists?
-    !@droplet.nil?
+    !droplet.nil?
   end
 
   def to_s
-    "digitalocean droplet #{name}"
+    "digitalocean droplet #{@value}"
+  end
+
+  private
+
+  def droplet
+    return @droplets if defined?(@droplets)
+    droplets = inspec.backend.droplet_client.droplets.all.select { |key|
+      key[@id].to_s == @value.to_s
+    }
+    if droplets.one?
+      @droplets = droplets[0]
+    else
+      @droplets = nil
+    end
+    @droplets
   end
 end

@@ -18,48 +18,52 @@ class DigitaloceanVolume < Inspec.resource(1)
       @id = :id
       @value = opts[:id]
     end
-
-    @do = inspec.backend
-    @vols = @do.droplet_client.volumes.all.select { |key|
-      key[@id] == @value
-    }
   end
 
   def id
-    return nil unless @vols.one?
-    @vols[0][:id]
+    volume[:id] unless volume.nil?
   end
 
   def name
-    return nil unless @vols.one?
-    @vols[0][:name]
+    volume[:name] unless volume.nil?
   end
 
   def description
-    return nil unless @vols.one?
-    @vols[0][:description]
+    volume[:description] unless volume.nil?
   end
 
   def size
-    return nil unless @vols.one?
-    @vols[0][:size_gigabytes]
+    volume[:size_gigabytes] unless volume.nil?
   end
 
   def region
-    # TODO: we should return a better object here
-    @vols[:region].slug
+    volume[:region].slug unless volume.nil?
   end
 
   def droplet_ids
-    return nil unless @vols.one?
-    @vols[0][:droplet_ids]
+    volume[:droplet_ids] unless volume.nil?
   end
 
   def exists?
-    @vols.one?
+    !volume.nil?
   end
 
   def to_s
     "digitalocean volume #{@id}"
+  end
+
+  private
+
+  def volume
+    return @vols if defined?(@vols)
+    vols = inspec.backend.droplet_client.volumes.all.select { |key|
+      key[@id].to_s == @value.to_s
+    }
+    if vols.one?
+      @vols = vols[0]
+    else
+      @vols = nil
+    end
+    @vols
   end
 end

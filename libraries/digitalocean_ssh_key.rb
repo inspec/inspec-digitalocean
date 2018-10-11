@@ -19,38 +19,44 @@ class DigitaloceanSSHKey < Inspec.resource(1)
       @id = :id
       @value = opts[:id]
     end
-
-    @do = inspec.backend
-    @keys = @do.droplet_client.ssh_keys.all.select { |key|
-      key[@id] == @value
-    }
   end
 
   def id
-    return nil unless @keys.one?
-    @keys[0][:id]
+    key[:id] unless key.nil?
   end
 
   def name
-    return nil unless @keys.one?
-    @keys[0][:name]
+    key[:name] unless key.nil?
   end
 
   def fingerprint
-    return nil unless @keys.one?
-    @keys[0][:fingerprint]
+    key[:fingerprint] unless key.nil?
   end
 
   def public_key
-    return nil unless @keys.one?
-    @keys[0][:public_key]
+    key[:public_key] unless key.nil?
   end
 
   def exists?
-    @keys.one?
+    !key.nil?
   end
 
   def to_s
     "digitalocean ssh_key #{@value}"
+  end
+
+  private
+
+  def key
+    return @keys if defined?(@keys)
+    keys = inspec.backend.droplet_client.ssh_keys.all.select { |key|
+      key[@id].to_s == @value.to_s
+    }
+    if keys.one?
+      @keys = keys[0]
+    else
+      @keys = nil
+    end
+    @keys
   end
 end

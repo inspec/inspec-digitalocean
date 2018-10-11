@@ -34,6 +34,7 @@ describe digitalocean_volume(id: volume['id']) do
   its('description') { should eq 'web volume' }
   its('droplet_ids') { should include droplet['id'].to_i }
   its('size') { should eq 100 }
+  its('region') { should eq 'ams3' }
 end
 
 describe digitalocean_tag(name: 'nginx') do

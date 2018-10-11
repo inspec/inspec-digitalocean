@@ -10,56 +10,60 @@ class DigitaloceanCertificate < Inspec.resource(1)
   def initialize(opts = {})
     super()
     if opts[:name]
-      id = :name
-      value = opts[:name]
+      @id = :name
+      @value = opts[:name]
     end
 
     if opts[:id]
-      id = :id
-      value = opts[:id]
+      @id = :id
+      @value = opts[:id]
     end
-
-    @do = inspec.backend
-    @certs = @do.droplet_client.certificates.all.select { |cert|
-      cert[id] == value
-    }
   end
 
   def id
-    return nil unless @certs.one?
-    @certs[0][:id]
+    certificate[:id] unless certificate.nil?
   end
 
   def name
-    return nil unless @certs.one?
-    @certs[0][:name]
+    certificate[:name] unless certificate.nil?
   end
 
   def type
-    return nil unless @certs.one?
-    @certs[0][:type]
+    certificate[:type] unless certificate.nil?
   end
 
   def state
-    return nil unless @certs.one?
-    @certs[0][:state]
+    certificate[:state] unless certificate.nil?
   end
 
   def not_after
-    return nil unless @certs.one?
-    @certs[0][:not_after]
+    certificate[:not_after] unless certificate.nil?
   end
 
   def sha1_fingerprint
-    return nil unless @certs.one?
-    @certs[0][:sha1_fingerprint]
+    certificate[:sha1_fingerprint] unless certificate.nil?
   end
 
   def exists?
-    @certs.one?
+    !certificate.nil?
   end
 
   def to_s
     "digitalocean certificate #{@id}"
+  end
+
+  private
+
+  def certificate
+    return @certs if defined?(@certs)
+    certs = inspec.backend.droplet_client.certificates.all.select { |key|
+      key[@id].to_s == @value.to_s
+    }
+    if certs.one?
+      @certs = certs[0]
+    else
+      @certs = nil
+    end
+    @certs
   end
 end
