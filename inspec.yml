@@ -4,7 +4,7 @@ maintainer: Christoph Hartmann
 copyright: Christoph Hartmann
 copyright_email: chris@lollyrock.com
 license: Apache-2.0
-version: 0.1.0
+version: 0.2.0
 inspec_version: '>= 2.3.10'
 supports:
   platform: digitalocean
