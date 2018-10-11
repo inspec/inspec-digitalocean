@@ -91,3 +91,5 @@ Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: comma
 Style/UnlessElse:
   Enabled: false
+Style/FormatStringToken:
+   Enabled: false

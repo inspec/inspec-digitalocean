@@ -5,3 +5,8 @@ test/integration/attributes.yml
 terraform.tfstate
 terraform.tfstate.backup
 inspec-digitalocean.plan
+domain.crt
+domain.csr
+domain.key
+id_rsa
+id_rsa.pub

@@ -17,15 +17,15 @@ task lint: [:rubocop]
 desc 'default resource pack checks'
 task default: [:lint, 'test:check']
 
-namespace :test do
+namespace :test do # rubocop:disable Metrics/BlockLength
   # Specify the directory for the integration tests
   integration_dir = 'test/integration'
 
   # Specify the terraform plan name
-  plan_name = "inspec-digitalocean.plan"
+  plan_name = 'inspec-digitalocean.plan'
 
   # The below file allows to inject parameters as profile attributes to inspec
-  profile_attributes = "attributes.yml"
+  profile_attributes = 'attributes.yml'
 
   # run inspec check to verify that the profile is properly configured
   task :check do
@@ -37,31 +37,42 @@ namespace :test do
 
   task :init_workspace do
     # Initialize terraform workspace
-    cmd = format("cd %s/build/ && terraform init", integration_dir)
+    cmd = format('cd %s/build/ && terraform init', integration_dir)
+    sh(cmd)
+
+    # create private key
+    cmd = format("cd %s/build/ && ssh-keygen -t rsa -b 4096 -C 'digitalocean' -N '' -f ./id_rsa", integration_dir)
+    sh(cmd)
+
+    # create certificate for load balancer
+    cmd = format("cd %s/build/ && openssl req -newkey rsa:2048 -nodes -keyout domain.key -out domain.csr  -subj '/C=DE/ST=Berlin/L=Berlin/O=InSpec Security/OU=IT Department/CN=example.com'", integration_dir)
+    sh(cmd)
+
+    cmd = format("cd %s/build/ && openssl req -key domain.key -new -x509 -days 365 -out domain.crt -subj '/C=DE/ST=Berlin/L=Berlin/O=InSpec Security/OU=IT Department/CN=example.com'", integration_dir)
     sh(cmd)
   end
 
   task :plan_integration_tests do
-    puts "----> Setup"
+    puts '----> Setup'
     # Create the plan that can be applied
-    cmd = format("cd %s/build/ && terraform plan -out %s", integration_dir, plan_name)
+    cmd = format('cd %s/build/ && terraform plan -out %s', integration_dir, plan_name)
     sh(cmd)
   end
 
   task :setup_integration_tests do
-    cmd = format("cd %s/build/ && terraform apply %s", integration_dir, plan_name)
+    cmd = format('cd %s/build/ && terraform apply %s', integration_dir, plan_name)
     sh(cmd)
   end
 
   task :run_integration_tests do
-    puts "----> Run"
-    cmd = format("inspec exec %s/verify --distinct_exit --attrs %s/%s -t digitalocean://", integration_dir, integration_dir, profile_attributes)
+    puts '----> Run'
+    cmd = format('inspec exec %s/verify --distinct_exit --attrs %s/%s -t digitalocean://', integration_dir, integration_dir, profile_attributes)
     sh(cmd)
   end
 
   task :cleanup_integration_tests do
-    puts "----> Cleanup"
-    cmd = format("cd %s/build/ && terraform destroy -force || true", integration_dir)
+    puts '----> Cleanup'
+    cmd = format('cd %s/build/ && terraform destroy -force || true', integration_dir)
     sh(cmd)
   end
 
@@ -72,25 +83,25 @@ namespace :test do
 
     iattributes = {}
     state['modules'][0]['resources'].each { |k, v|
-      iattributes[k] = v["primary"]["attributes"]
+      iattributes[k] = v['primary']['attributes']
     }
 
     # write inspec attributes
     require 'yaml'
-    File.open("#{integration_dir}/#{profile_attributes}", "w") { |file| file.write(iattributes.to_yaml) }
+    File.open("#{integration_dir}/#{profile_attributes}", 'w') { |file| file.write(iattributes.to_yaml) }
   end
 
-  desc "Perform Integration Tests"
+  desc 'Perform Integration Tests'
   task :integration do
-    Rake::Task["test:init_workspace"].execute
-    if File.exists?(File.join(integration_dir,"build"))
-      Rake::Task["test:cleanup_integration_tests"].execute
+    Rake::Task['test:init_workspace'].execute
+    if File.exist?(File.join(integration_dir, 'build'))
+      Rake::Task['test:cleanup_integration_tests'].execute
     end
-    Rake::Task["test:plan_integration_tests"].execute
-    Rake::Task["test:setup_integration_tests"].execute
-    Rake::Task["test:tfstate"].execute
-    Rake::Task["test:run_integration_tests"].execute
-    Rake::Task["test:cleanup_integration_tests"].execute
+    Rake::Task['test:plan_integration_tests'].execute
+    Rake::Task['test:setup_integration_tests'].execute
+    Rake::Task['test:tfstate'].execute
+    Rake::Task['test:run_integration_tests'].execute
+    Rake::Task['test:cleanup_integration_tests'].execute
   end
 end
 

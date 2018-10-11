@@ -53,6 +53,6 @@ describe digitalocean_certificate(id: cert['id']) do
   its('name') { should eq 'nginx' }
   its('type') { should eq 'custom' }
   its('state') { should eq 'verified' }
-  its('sha1_fingerprint') { should eq 'd628736d059eab8911c7891d22e1faa50216acc8' }
-  its('not_after') { should eq '2019-10-09T21:29:54Z' }
+  its('sha1_fingerprint') { should eq cert['sha1_fingerprint'] }
+  its('not_after') { should eq cert['not_after'] }
 end
