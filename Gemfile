@@ -12,5 +12,5 @@ end
 
 group :inspec do
   gem 'inspec', '~> 2.2', '>= 2.2.10'
-  gem 'train-digitalocean', path: '/Users/chartmann/go/src/github.com/chris-rock/train-digitalocean'
+  gem 'train-digitalocean'
 end
