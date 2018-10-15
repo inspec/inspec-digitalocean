@@ -50,6 +50,7 @@ class DigitaloceanSSHKey < Inspec.resource(1)
 
   def key
     return @keys if defined?(@keys)
+
     keys = inspec.backend.droplet_client.ssh_keys.all.select { |key|
       key[@id].to_s == @value.to_s
     }

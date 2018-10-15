@@ -7,7 +7,7 @@ group :development do
   gem 'passgen'
   gem 'pry-coolline'
   gem 'rake'
-  gem 'rubocop'
+  gem 'rubocop', '~> 0.59'
 end
 
 group :inspec do

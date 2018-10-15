@@ -47,6 +47,7 @@ class DigitaloceanLoadbalancer < Inspec.resource(1)
 
   def forwardingrules
     return [] if loadbalancer.nil?
+
     loadbalancer.forwarding_rules
   end
 
@@ -58,6 +59,7 @@ class DigitaloceanLoadbalancer < Inspec.resource(1)
 
   def loadbalancer
     return @lbs if defined?(@lbs)
+
     lbs = inspec.backend.droplet_client.load_balancers.all.select { |lb|
       lb[@id].to_s == @value.to_s
     }

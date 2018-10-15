@@ -29,6 +29,7 @@ class DigitaloceanTag < Inspec.resource(1)
 
   def tag
     return @tags if defined?(@tags)
+
     tags = inspec.backend.droplet_client.tags.all.select { |v|
       v[:name].to_s == @name.to_s
     }

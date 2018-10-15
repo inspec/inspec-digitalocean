@@ -77,6 +77,7 @@ class DigitaloceanDroplet < Inspec.resource(1)
 
   def droplet
     return @droplets if defined?(@droplets)
+
     droplets = inspec.backend.droplet_client.droplets.all.select { |key|
       key[@id].to_s == @value.to_s
     }
