@@ -45,7 +45,7 @@ class DigitaloceanLoadbalancer < Inspec.resource(1)
     !loadbalancer.nil?
   end
 
-  def forwardingrules
+  def forwarding_rules
     return [] if loadbalancer.nil?
 
     loadbalancer.forwarding_rules

@@ -49,6 +49,23 @@ describe digitalocean_loadbalancer(name: 'loadbalancer-1') do
   its('ip') { should eq loadbalancer['ip'] }
 end
 
+digitalocean_loadbalancer(name: 'loadbalancer-1').forwarding_rules.each { |rule|
+  describe.one do
+    describe rule do
+      its('entry_protocol') { should eq 'https' }
+      its('entry_port') { should eq 443 }
+      its('target_protocol') { should eq 'http' }
+      its('target_port') { should eq 80 }
+    end
+    describe rule do
+      its('entry_protocol') { should eq 'http' }
+      its('entry_port') { should eq 80 }
+      its('target_protocol') { should eq 'http' }
+      its('target_port') { should eq 80 }
+    end
+  end
+}
+
 describe digitalocean_certificate(id: cert['id']) do
   it { should exist }
   its('name') { should eq 'nginx' }
