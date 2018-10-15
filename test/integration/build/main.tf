@@ -33,7 +33,10 @@ resource "digitalocean_droplet" "web" {
     inline = [
       "export PATH=$PATH:/usr/bin",
       "sudo apt-get update",
-      "sudo apt-get -y install nginx",
+      "sudo apt-get -y install nginx curl",
+      # remove old index.html and replace with hello nginx
+      "rm /var/www/html/index.nginx-debian.html",
+      "curl -L https://bit.ly/hello-inspec -o /var/www/html/index.html"      
     ]
 
     connection {
