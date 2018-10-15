@@ -1,11 +1,12 @@
 class DigitaloceanLoadbalancer < Inspec.resource(1)
   name 'digitalocean_loadbalancer'
-  desc 'Verifies digitalocean firewall'
+  desc 'Verifies digitalocean loadbalancer'
   example "
     describe digitalocean_loadbalancer(name: 'my cert') do
       it { should exist }
     end
   "
+  supports platform: 'digitalocean'
 
   def initialize(opts = {})
     super()
@@ -42,6 +43,11 @@ class DigitaloceanLoadbalancer < Inspec.resource(1)
 
   def exists?
     !loadbalancer.nil?
+  end
+
+  def forwardingrules
+    return [] if loadbalancer.nil?
+    loadbalancer.forwarding_rules
   end
 
   def to_s

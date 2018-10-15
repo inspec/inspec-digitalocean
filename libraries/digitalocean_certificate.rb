@@ -6,6 +6,7 @@ class DigitaloceanCertificate < Inspec.resource(1)
       it { should exist }
     end
   "
+  supports platform: 'digitalocean'
 
   def initialize(opts = {})
     super()
