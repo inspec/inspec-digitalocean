@@ -37,8 +37,16 @@ class DigitaloceanDroplet < Inspec.resource(1)
     droplet[:image].slug unless droplet.nil?
   end
 
+  def ipv4
+    droplet[:networks].v4[0].ip_address unless droplet.nil?
+  end
+
   def ipv6
-    droplet[:ipv6] unless droplet.nil?
+    droplet[:networks].v6[0].ip_address unless droplet.nil?
+  end
+
+  def private_ipv4
+    droplet[:networks].v4[1].ip_address unless droplet.nil?
   end
 
   def locked
@@ -51,6 +59,10 @@ class DigitaloceanDroplet < Inspec.resource(1)
 
   def disk
     droplet[:disk] unless droplet.nil?
+  end
+
+  def memory
+    droplet[:memory] unless droplet.nil?
   end
 
   def vcpus
