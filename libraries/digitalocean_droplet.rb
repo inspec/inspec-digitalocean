@@ -21,12 +21,14 @@ class DigitaloceanDroplet < Inspec.resource(1)
     end
   end
 
-  def id
-    droplet[:id] unless droplet.nil?
-  end
-
-  def name
-    droplet[:name] unless droplet.nil?
+  %w{
+    id name locked disk vcpus 
+    tags ipv6 features volumes 
+    snapshot_ids
+  }.each do |property|
+    define_method property do
+      droplet[property] unless droplet.nil?
+    end
   end
 
   def region
@@ -37,48 +39,26 @@ class DigitaloceanDroplet < Inspec.resource(1)
     droplet[:image].slug unless droplet.nil?
   end
 
-  def ipv4
-    droplet[:networks].v4[0].ip_address unless droplet.nil?
-  end
-
-  def ipv6
-    droplet[:networks].v6[0].ip_address unless droplet.nil?
-  end
-
-  def private_ipv4
-    droplet[:networks].v4[1].ip_address unless droplet.nil?
-  end
-
-  def locked
-    droplet[:locked] unless droplet.nil?
-  end
-
   def size
-    droplet[:size_slug] unless droplet.nil?
-  end
-
-  def disk
-    droplet[:disk] unless droplet.nil?
-  end
-
-  def memory
-    droplet[:memory] unless droplet.nil?
-  end
-
-  def vcpus
-    droplet[:vcpus] unless droplet.nil?
-  end
-
-  def status
-    droplet[:status] unless droplet.nil?
-  end
-
-  def tags
-    droplet[:tags] unless droplet.nil?
+    droplet[:size].slug unless droplet.nil?
   end
 
   def exists?
     !droplet.nil?
+  end
+
+  %w{
+    active off
+  }.each do |status|
+    define_method status + '?' do
+      return @state if defined?(@state)
+      @_state = droplet[:status] unless droplet.nil?
+      if @_state == status
+        @state = true
+      else
+        @state = nil
+      end
+    end
   end
 
   def to_s
