@@ -22,8 +22,8 @@ class DigitaloceanDroplet < Inspec.resource(1)
   end
 
   %w{
-    id name locked disk vcpus 
-    tags ipv6 features volumes 
+    id name locked disk vcpus
+    tags ipv6 features volumes
     snapshot_ids
   }.each do |property|
     define_method property do
@@ -52,6 +52,7 @@ class DigitaloceanDroplet < Inspec.resource(1)
   }.each do |status|
     define_method status + '?' do
       return @state if defined?(@state)
+
       @_state = droplet[:status] unless droplet.nil?
       if @_state == status
         @state = true
