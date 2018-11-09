@@ -43,6 +43,18 @@ class DigitaloceanDroplet < Inspec.resource(1)
     droplet[:size].slug unless droplet.nil?
   end
 
+  def ipv6
+    droplet[:networks].v6[0].ip_address unless droplet.nil?
+  end
+
+  def ipv4
+    droplet[:networks].v4[0].ip_address unless droplet.nil?
+  end
+
+  def private_ipv4
+    droplet[:networks].v4[1].ip_address unless droplet.nil?
+  end
+
   def exists?
     !droplet.nil?
   end
