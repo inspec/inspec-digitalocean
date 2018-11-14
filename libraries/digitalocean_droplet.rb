@@ -78,7 +78,7 @@ class DigitaloceanDroplet < Inspec.resource(1)
   def droplet
     return @droplets if defined?(@droplets)
     # for inspec check inspec.backend.droplet_client will be nil
-    return nil if inspec.backend.is_a?(Train::Transports::Mock::Connection)
+    return nil if inspec.backend.class.to_s == 'Train::Transports::Mock::Connection'
 
     droplets = inspec.backend.droplet_client.droplets.all.select { |key|
       key[@id].to_s == @value.to_s

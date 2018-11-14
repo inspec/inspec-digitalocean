@@ -58,7 +58,7 @@ class DigitaloceanCertificate < Inspec.resource(1)
   def certificate
     return @certs if defined?(@certs)
     # for inspec check inspec.backend.droplet_client will be nil
-    return nil if inspec.backend.is_a?(Train::Transports::Mock::Connection)
+    return nil if inspec.backend.class.to_s == 'Train::Transports::Mock::Connection'
 
     certs = inspec.backend.droplet_client.certificates.all.select { |key|
       key[@id].to_s == @value.to_s
