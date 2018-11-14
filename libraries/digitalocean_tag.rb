@@ -29,6 +29,8 @@ class DigitaloceanTag < Inspec.resource(1)
 
   def tag
     return @tags if defined?(@tags)
+    # for inspec check inspec.backend.droplet_client will be nil
+    return nil if inspec.backend.is_a?(Train::Transports::Mock::Connection)
 
     tags = inspec.backend.droplet_client.tags.all.select { |v|
       v[:name].to_s == @name.to_s

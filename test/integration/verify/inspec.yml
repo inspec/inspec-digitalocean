@@ -2,7 +2,7 @@ name: inspec-digitalocean-integration-tests
 version: 0.1.0
 inspec_version: '>= 2.3.10'
 depends:
-  - name: inspec-gcp
+  - name: inspec-digitalocean
     path: ../../../
 supports:
   platform: digitalocean
