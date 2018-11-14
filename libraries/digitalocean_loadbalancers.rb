@@ -32,6 +32,8 @@ class DigitaloceanLoadbalancers < Inspec.resource(1)
 
   def loadbalancers
     return @lbs if defined?(@lbs)
+    # for inspec check inspec.backend.droplet_client will be nil
+    return nil if inspec.backend.is_a?(Train::Transports::Mock::Connection)
 
     @lbs = inspec.backend.droplet_client.load_balancers.all.collect { |lb|
       lb

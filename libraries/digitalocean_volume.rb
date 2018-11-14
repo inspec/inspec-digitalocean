@@ -57,6 +57,8 @@ class DigitaloceanVolume < Inspec.resource(1)
 
   def volume
     return @vols if defined?(@vols)
+    # for inspec check inspec.backend.droplet_client will be nil
+    return nil if inspec.backend.is_a?(Train::Transports::Mock::Connection)
 
     vols = inspec.backend.droplet_client.volumes.all.select { |key|
       key[@id].to_s == @value.to_s

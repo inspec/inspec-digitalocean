@@ -50,6 +50,8 @@ class DigitaloceanSSHKey < Inspec.resource(1)
 
   def key
     return @keys if defined?(@keys)
+    # for inspec check inspec.backend.droplet_client will be nil
+    return nil if inspec.backend.is_a?(Train::Transports::Mock::Connection)
 
     keys = inspec.backend.droplet_client.ssh_keys.all.select { |key|
       key[@id].to_s == @value.to_s
