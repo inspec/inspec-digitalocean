@@ -1,3 +1,7 @@
+* **[Project State](https://github.com/chef/chef-oss-practices/blob/master/repo-management/repo-states.md): Maintained**
+* **Issues [Response Time Maximum](https://github.com/chef/chef-oss-practices/blob/master/repo-management/repo-states.md): 7 days or more**
+* **Pull Request [Response Time Maximum](https://github.com/chef/chef-oss-practices/blob/master/repo-management/repo-states.md): 7 days or more**
+
 # InSpec DigitalOcean Resource Pack
 
 This InSpec resource pack provides InSpec resources to verify Digitialocean Cloud settings. It is designed to work hand-in-hand with Digitalocean's [terrafrom provider](https://github.com/terraform-providers/terraform-provider-digitalocean) and follows their naming convention.
