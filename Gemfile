@@ -11,6 +11,6 @@ group :development do
 end
 
 group :inspec do
-  gem 'inspec', '~> 2.2', '>= 2.2.10'
+  gem 'inspec', '~> 3.9'
   gem 'train-digitalocean'
 end
